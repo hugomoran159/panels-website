@@ -1,0 +1,22 @@
+---
+interface Props {
+  muted?: boolean;
+  class?: string;
+  id?: string;
+}
+
+const { muted = false, class: className = "", id } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={[
+    "py-24 px-6",
+    muted && "bg-[--color-surface-muted]",
+    className
+  ]}
+>
+  <div class="max-w-7xl mx-auto">
+    <slot />
+  </div>
+</section>

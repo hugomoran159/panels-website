@@ -1,0 +1,202 @@
+---
+import Button from "./Button.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+const navLinks = [
+  { label: "Features", href: "/features" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Docs", href: "/docs" },
+  { label: "Blog", href: "/blog" },
+];
+---
+
+<header
+  class:list={[
+    "sticky top-0 z-50 border-b border-[--color-border] bg-[--color-bg]/80 backdrop-blur-sm",
+    className
+  ]}
+>
+  <div class="max-w-7xl mx-auto px-6">
+    <nav class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="text-xl font-semibold text-[--color-text]">
+        Panels
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-sm text-[--color-text-muted] hover:text-[--color-text] transition-colors"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+
+      <!-- Desktop Actions -->
+      <div class="hidden md:flex items-center gap-3">
+        <ThemeToggle />
+        <Button variant="ghost" href="/login">Sign In</Button>
+        <Button variant="primary" href="/signup">
+          Get Started
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </Button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex md:hidden items-center gap-2">
+        <ThemeToggle />
+        <button
+          data-mobile-menu-toggle
+          type="button"
+          class="p-2 rounded-[--radius-sm] text-[--color-text-muted] hover:text-[--color-text] hover:bg-[--color-surface-muted] transition-colors"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <i class="ph ph-list text-xl menu-icon-open" aria-hidden="true"></i>
+          <i class="ph ph-x text-xl menu-icon-close hidden" aria-hidden="true"></i>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    class="hidden md:hidden border-t border-[--color-border] bg-[--color-bg]"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Navigation menu"
+  >
+    <div class="px-6 py-4 space-y-4">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="block text-sm text-[--color-text-muted] hover:text-[--color-text] transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+      <div class="pt-4 border-t border-[--color-border] space-y-3">
+        <Button variant="ghost" href="/login" class="w-full justify-center">Sign In</Button>
+        <Button variant="primary" href="/signup" class="w-full justify-center">
+          Get Started
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </Button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  function initMobileMenu() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-menu-toggle]');
+    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+    if (!toggle || !menu) return;
+
+    // Skip if already initialized
+    if (toggle.hasAttribute('data-initialized')) return;
+    toggle.setAttribute('data-initialized', 'true');
+
+    const iconOpen = toggle.querySelector('.menu-icon-open');
+    const iconClose = toggle.querySelector('.menu-icon-close');
+
+    function getFocusableElements(): HTMLElement[] {
+      return Array.from(
+        menu.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+    }
+
+    function setOpen(open: boolean) {
+      menu.classList.toggle('hidden', !open);
+      iconOpen?.classList.toggle('hidden', open);
+      iconClose?.classList.toggle('hidden', !open);
+      toggle.setAttribute('aria-expanded', String(open));
+
+      if (open) {
+        // Focus first focusable element in menu
+        const focusable = getFocusableElements();
+        if (focusable.length > 0) {
+          focusable[0].focus();
+        }
+      } else {
+        // Return focus to toggle button
+        toggle.focus();
+      }
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      const isOpen = !menu.classList.contains('hidden');
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setOpen(false);
+        return;
+      }
+
+      // Focus trap
+      if (e.key === 'Tab') {
+        const focusable = getFocusableElements();
+        if (focusable.length === 0) return;
+
+        const firstFocusable = focusable[0];
+        const lastFocusable = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          // Shift+Tab: if on first element, go to last
+          if (document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable.focus();
+          }
+        } else {
+          // Tab: if on last element, go to first
+          if (document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable.focus();
+          }
+        }
+      }
+    }
+
+    // Toggle menu on button click
+    toggle.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      setOpen(!isOpen);
+    });
+
+    // Handle keyboard navigation
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Close menu on link click
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      const isOpen = !menu.classList.contains('hidden');
+      if (!isOpen) return;
+
+      const target = e.target as Node;
+      if (!menu.contains(target) && !toggle.contains(target)) {
+        setOpen(false);
+      }
+    });
+  }
+
+  initMobileMenu();
+  document.addEventListener('astro:after-swap', initMobileMenu);
+</script>

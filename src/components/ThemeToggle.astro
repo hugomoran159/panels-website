@@ -1,0 +1,87 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class:list={[
+    "p-2 rounded-[--radius-sm] text-[--color-text-muted] hover:text-[--color-text] hover:bg-[--color-surface-muted] transition-colors",
+    className
+  ]}
+  aria-label="Toggle theme, currently using system preference"
+>
+  <i class="ph ph-sun text-xl theme-icon-light" aria-hidden="true"></i>
+  <i class="ph ph-moon text-xl theme-icon-dark hidden" aria-hidden="true"></i>
+  <i class="ph ph-monitor text-xl theme-icon-system hidden" aria-hidden="true"></i>
+</button>
+
+<script>
+  const THEME_LABELS = {
+    light: 'Toggle theme, currently light',
+    dark: 'Toggle theme, currently dark',
+    system: 'Toggle theme, currently using system preference',
+  } as const;
+
+  function initThemeToggles() {
+    const toggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+
+    function getTheme(): 'light' | 'dark' | 'system' {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+      return 'system';
+    }
+
+    function updateAllToggles(theme: 'light' | 'dark' | 'system') {
+      toggles.forEach((toggle) => {
+        const iconLight = toggle.querySelector('.theme-icon-light');
+        const iconDark = toggle.querySelector('.theme-icon-dark');
+        const iconSystem = toggle.querySelector('.theme-icon-system');
+
+        iconLight?.classList.toggle('hidden', theme !== 'light');
+        iconDark?.classList.toggle('hidden', theme !== 'dark');
+        iconSystem?.classList.toggle('hidden', theme !== 'system');
+
+        toggle.setAttribute('aria-label', THEME_LABELS[theme]);
+      });
+    }
+
+    function setTheme(theme: 'light' | 'dark' | 'system') {
+      if (theme === 'system') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.removeItem('theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+      }
+      updateAllToggles(theme);
+    }
+
+    function cycleTheme() {
+      const current = getTheme();
+      const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
+      setTheme(next);
+    }
+
+    // Initialize state
+    updateAllToggles(getTheme());
+
+    // Attach click handlers (using data attribute to track initialization)
+    toggles.forEach((toggle) => {
+      if (!toggle.hasAttribute('data-initialized')) {
+        toggle.addEventListener('click', cycleTheme);
+        toggle.setAttribute('data-initialized', 'true');
+      }
+    });
+  }
+
+  // Run on initial load
+  initThemeToggles();
+
+  // Re-run on Astro page transitions
+  document.addEventListener('astro:after-swap', initThemeToggles);
+</script>

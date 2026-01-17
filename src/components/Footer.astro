@@ -1,0 +1,90 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+const footerLinks = {
+  Product: [
+    { label: "Features", href: "/features" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Changelog", href: "/changelog" },
+    { label: "Roadmap", href: "/roadmap" },
+  ],
+  Resources: [
+    { label: "Documentation", href: "/docs" },
+    { label: "Blog", href: "/blog" },
+    { label: "Tutorials", href: "/tutorials" },
+    { label: "API Reference", href: "/api" },
+  ],
+  Company: [
+    { label: "About", href: "/about" },
+    { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
+  ],
+  Legal: [
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
+  ],
+};
+
+const socialLinks = [
+  { label: "GitHub", href: "https://github.com/panels", icon: "ph-github-logo" },
+  { label: "Twitter", href: "https://twitter.com/panels", icon: "ph-x-logo" },
+  { label: "Discord", href: "https://discord.gg/panels", icon: "ph-discord-logo" },
+];
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class:list={["border-t border-[--color-border] bg-[--color-surface-muted]", className]}>
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <!-- Links Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-16">
+      {Object.entries(footerLinks).map(([category, links]) => (
+        <div>
+          <h3 class="text-sm font-semibold text-[--color-text] mb-4">{category}</h3>
+          <ul class="space-y-3">
+            {links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-[--color-text-muted] hover:text-[--color-text] transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="mt-16 pt-8 border-t border-[--color-border] flex flex-col sm:flex-row items-center justify-between gap-4">
+      <!-- Logo & Copyright -->
+      <div class="flex items-center gap-4">
+        <a href="/" class="text-lg font-semibold text-[--color-text]">Panels</a>
+        <span class="text-sm text-[--color-text-muted]">
+          &copy; {currentYear} Panels. All rights reserved.
+        </span>
+      </div>
+
+      <!-- Social Links -->
+      <div class="flex items-center gap-4">
+        {socialLinks.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-2 rounded-[--radius-sm] text-[--color-text-muted] hover:text-[--color-text] hover:bg-[--color-surface] transition-colors"
+            aria-label={link.label}
+          >
+            <i class={`ph ${link.icon} text-xl`}></i>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>

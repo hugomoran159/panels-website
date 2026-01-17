@@ -1,0 +1,53 @@
+---
+interface Props {
+  label?: string;
+  type?: string;
+  name: string;
+  placeholder?: string;
+  required?: boolean;
+  error?: string;
+  class?: string;
+}
+
+const {
+  label,
+  type = "text",
+  name,
+  placeholder,
+  required = false,
+  error,
+  class: className = "",
+} = Astro.props;
+
+const inputId = `input-${name}`;
+const errorId = `${inputId}-error`;
+---
+
+<div class:list={["flex flex-col gap-1.5", className]}>
+  {label && (
+    <label for={inputId} class="text-sm font-medium text-[--color-text]">
+      {label}
+      {required && <span class="text-[--color-error]" aria-hidden="true">*</span>}
+    </label>
+  )}
+
+  <input
+    type={type}
+    id={inputId}
+    name={name}
+    placeholder={placeholder}
+    required={required}
+    aria-describedby={error ? errorId : undefined}
+    aria-invalid={error ? "true" : undefined}
+    class:list={[
+      "w-full bg-[--color-surface] border rounded-[--radius-sm] px-3 py-2 text-sm text-[--color-text] placeholder:text-[--color-text-muted]",
+      "focus:border-[--color-accent] focus:outline-none focus:ring-1 focus:ring-[--color-accent]",
+      "transition-colors",
+      error ? "border-[--color-error]" : "border-[--color-border]",
+    ]}
+  />
+
+  {error && (
+    <p id={errorId} class="text-xs text-[--color-error]" role="alert">{error}</p>
+  )}
+</div>

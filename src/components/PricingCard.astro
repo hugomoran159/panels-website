@@ -1,0 +1,75 @@
+---
+import Button from "./Button.astro";
+import Badge from "./Badge.astro";
+
+interface Props {
+  name: string;
+  description?: string;
+  price: string;
+  period?: string;
+  features: string[];
+  highlighted?: boolean;
+  ctaText?: string;
+  ctaHref?: string;
+  badge?: string;
+  class?: string;
+}
+
+const {
+  name,
+  description,
+  price,
+  period = "/month",
+  features,
+  highlighted = false,
+  ctaText = "Get Started",
+  ctaHref = "/signup",
+  badge,
+  class: className = "",
+} = Astro.props;
+---
+
+<div
+  class:list={[
+    "relative bg-[--color-surface] border rounded-[--radius-md] p-6 flex flex-col",
+    highlighted ? "border-[--color-accent] border-2" : "border-[--color-border]",
+    className
+  ]}
+>
+  {badge && (
+    <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+      <Badge variant="accent">{badge}</Badge>
+    </div>
+  )}
+
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-[--color-text]">{name}</h3>
+    {description && (
+      <p class="text-sm text-[--color-text-muted] mt-1">{description}</p>
+    )}
+  </div>
+
+  <div class="mb-6">
+    <span class="text-4xl font-semibold text-[--color-text]">{price}</span>
+    {period && price !== "Custom" && (
+      <span class="text-sm text-[--color-text-muted]">{period}</span>
+    )}
+  </div>
+
+  <ul class="space-y-3 mb-8 flex-grow">
+    {features.map((feature) => (
+      <li class="flex items-start gap-3 text-sm text-[--color-text-muted]">
+        <i class="ph ph-check text-[--color-success] mt-0.5 flex-shrink-0" aria-hidden="true"></i>
+        <span>{feature}</span>
+      </li>
+    ))}
+  </ul>
+
+  <Button
+    variant={highlighted ? "primary" : "secondary"}
+    href={ctaHref}
+    class="w-full justify-center"
+  >
+    {ctaText}
+  </Button>
+</div>
