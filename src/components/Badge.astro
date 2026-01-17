@@ -1,0 +1,26 @@
+---
+interface Props {
+  variant?: "default" | "accent" | "success" | "warning" | "error";
+  class?: string;
+}
+
+const { variant = "default", class: className = "" } = Astro.props;
+
+const variants = {
+  default: "bg-[--color-surface-muted] text-[--color-text-muted] border-[--color-border]",
+  accent: "bg-[--color-accent-muted] text-[--color-accent] border-[--color-accent]/20",
+  success: "bg-[--color-success-muted] text-[--color-success] border-[--color-success]/20",
+  warning: "bg-[--color-warning-muted] text-[--color-warning] border-[--color-warning]/20",
+  error: "bg-[--color-error-muted] text-[--color-error] border-[--color-error]/20",
+};
+---
+
+<span
+  class:list={[
+    "inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-[--radius-full] border",
+    variants[variant],
+    className
+  ]}
+>
+  <slot />
+</span>

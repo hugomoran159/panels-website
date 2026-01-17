@@ -1,0 +1,68 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  placeholder?: string;
+  buttonText?: string;
+  class?: string;
+}
+
+const {
+  placeholder = "Enter your email",
+  buttonText = "Subscribe",
+  class: className = "",
+} = Astro.props;
+---
+
+<form class:list={["flex gap-2", className]} data-newsletter-form>
+  <label for="newsletter-email" class="sr-only">Email address</label>
+  <input
+    type="email"
+    id="newsletter-email"
+    name="email"
+    placeholder={placeholder}
+    required
+    autocomplete="email"
+    class="flex-1 min-w-0 bg-[--color-surface] border border-[--color-border] rounded-[--radius-sm] px-3 py-2 text-sm text-[--color-text] placeholder:text-[--color-text-muted] focus:border-[--color-accent] focus:outline-none focus:ring-1 focus:ring-[--color-accent] transition-colors"
+  />
+  <Button type="submit" variant="primary">
+    {buttonText}
+    <i class="ph ph-arrow-right" aria-hidden="true"></i>
+  </Button>
+</form>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style>
+
+<script>
+  function initNewsletterForms() {
+    document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]').forEach((form) => {
+      // Skip if already initialized
+      if (form.hasAttribute('data-initialized')) return;
+      form.setAttribute('data-initialized', 'true');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = form.querySelector<HTMLInputElement>('input[type="email"]')?.value;
+        console.log('Newsletter signup:', email);
+        // TODO: Replace with proper notification UI
+        alert('Thanks for subscribing!');
+        form.reset();
+      });
+    });
+  }
+
+  initNewsletterForms();
+  document.addEventListener('astro:after-swap', initNewsletterForms);
+</script>

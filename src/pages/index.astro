@@ -1,16 +1,252 @@
 ---
-
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import Badge from "../components/Badge.astro";
+import FeatureCard from "../components/FeatureCard.astro";
+import PricingCard from "../components/PricingCard.astro";
+import BlogCard from "../components/BlogCard.astro";
+import Input from "../components/Input.astro";
+import Newsletter from "../components/Newsletter.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Panels - AI-Native Data Analytics">
+  <Header />
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <Section class="pt-32 pb-24">
+      <div class="text-center max-w-3xl mx-auto">
+        <Badge variant="accent" class="mb-6">Now in Public Beta</Badge>
+        <h1 class="text-5xl font-semibold text-[--color-text] mb-6 leading-tight">
+          Analytics that understands your data
+        </h1>
+        <p class="text-lg text-[--color-text-muted] mb-8 max-w-2xl mx-auto">
+          Panels is the AI-native analytics platform that lets you explore, visualize, and understand your data through natural conversation.
+        </p>
+        <div class="flex items-center justify-center gap-4">
+          <Button variant="primary" size="lg" href="/signup">
+            Get Started Free
+            <i class="ph ph-arrow-right" aria-hidden="true"></i>
+          </Button>
+          <Button variant="secondary" size="lg" href="/demo">
+            Watch Demo
+            <i class="ph ph-play" aria-hidden="true"></i>
+          </Button>
+        </div>
+      </div>
+    </Section>
+
+    <!-- Features Section -->
+    <Section muted id="features">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-semibold text-[--color-text] mb-4">
+          Built for modern data teams
+        </h2>
+        <p class="text-[--color-text-muted] max-w-2xl mx-auto">
+          Everything you need to turn data into insights, without the complexity.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <FeatureCard
+          icon="ph-chat-centered-text"
+          title="Natural Language Queries"
+          description="Ask questions in plain English. Panels translates your intent into precise SQL and visualizations."
+        />
+        <FeatureCard
+          icon="ph-chart-line-up"
+          title="Smart Visualizations"
+          description="AI automatically selects the best chart type for your data and highlights key insights."
+        />
+        <FeatureCard
+          icon="ph-database"
+          title="Connect Any Data Source"
+          description="PostgreSQL, MySQL, BigQuery, Snowflake, and more. Secure, read-only connections."
+        />
+        <FeatureCard
+          icon="ph-lightning"
+          title="Real-time Collaboration"
+          description="Share dashboards, annotate findings, and work together with your team in real-time."
+        />
+        <FeatureCard
+          icon="ph-lock-simple"
+          title="Enterprise Security"
+          description="SOC 2 compliant, end-to-end encryption, and granular access controls."
+        />
+        <FeatureCard
+          icon="ph-plugs-connected"
+          title="API & Integrations"
+          description="Embed analytics in your product or connect to Slack, Notion, and your existing tools."
+        />
+      </div>
+    </Section>
+
+    <!-- Pricing Section -->
+    <Section id="pricing">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-semibold text-[--color-text] mb-4">
+          Simple, transparent pricing
+        </h2>
+        <p class="text-[--color-text-muted] max-w-2xl mx-auto">
+          Start free, scale as you grow. No hidden fees.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <PricingCard
+          name="Starter"
+          description="For individuals and small teams"
+          price="$0"
+          period="/month"
+          features={[
+            "Up to 3 data sources",
+            "1,000 queries/month",
+            "Basic visualizations",
+            "7-day data history",
+            "Community support",
+          ]}
+          ctaText="Start Free"
+        />
+        <PricingCard
+          name="Pro"
+          description="For growing teams"
+          price="$49"
+          period="/month"
+          highlighted
+          badge="Most Popular"
+          features={[
+            "Unlimited data sources",
+            "Unlimited queries",
+            "Advanced visualizations",
+            "Unlimited data history",
+            "Priority support",
+            "Team collaboration",
+            "API access",
+          ]}
+        />
+        <PricingCard
+          name="Enterprise"
+          description="For large organizations"
+          price="Custom"
+          features={[
+            "Everything in Pro",
+            "SSO & SAML",
+            "Dedicated support",
+            "Custom integrations",
+            "SLA guarantee",
+            "On-premise option",
+          ]}
+          ctaText="Contact Sales"
+          ctaHref="/contact"
+        />
+      </div>
+    </Section>
+
+    <!-- Blog Preview Section -->
+    <Section muted id="blog">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <h2 class="text-3xl font-semibold text-[--color-text] mb-2">
+            From the blog
+          </h2>
+          <p class="text-[--color-text-muted]">
+            Insights, tutorials, and product updates.
+          </p>
+        </div>
+        <Button variant="secondary" href="/blog">
+          View all posts
+          <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </Button>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <BlogCard
+          title="Introducing Panels 2.0"
+          excerpt="Today we're launching the biggest update to Panels yet, with a completely redesigned interface and powerful new AI features."
+          date="2024-01-15"
+          href="/blog/introducing-panels-2"
+          author="Sarah Chen"
+        />
+        <BlogCard
+          title="How to Write Better Data Queries"
+          excerpt="Learn the art of asking the right questions to get the most out of your data with natural language analytics."
+          date="2024-01-10"
+          href="/blog/better-data-queries"
+          author="Marcus Johnson"
+        />
+        <BlogCard
+          title="Security Best Practices"
+          excerpt="A comprehensive guide to securing your data connections and maintaining compliance with Panels."
+          date="2024-01-05"
+          href="/blog/security-best-practices"
+          author="Alex Rivera"
+        />
+      </div>
+    </Section>
+
+    <!-- Newsletter Section -->
+    <Section>
+      <div class="max-w-xl mx-auto text-center">
+        <h2 class="text-3xl font-semibold text-[--color-text] mb-4">
+          Stay in the loop
+        </h2>
+        <p class="text-[--color-text-muted] mb-8">
+          Get product updates, tips, and insights delivered to your inbox.
+        </p>
+        <Newsletter class="max-w-md mx-auto" />
+        <p class="text-xs text-[--color-text-muted] mt-4">
+          No spam. Unsubscribe anytime.
+        </p>
+      </div>
+    </Section>
+
+    <!-- Component Demo Section (temporary, for review) -->
+    <Section muted>
+      <h2 class="text-2xl font-semibold text-[--color-text] mb-8">
+        Component Reference
+      </h2>
+
+      <!-- Buttons -->
+      <div class="mb-12">
+        <h3 class="text-lg font-medium text-[--color-text] mb-4">Buttons</h3>
+        <div class="flex flex-wrap items-center gap-4">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="primary" size="sm">Small</Button>
+          <Button variant="primary" size="lg">Large</Button>
+          <Button variant="primary">
+            With Icon
+            <i class="ph ph-arrow-right" aria-hidden="true"></i>
+          </Button>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="mb-12">
+        <h3 class="text-lg font-medium text-[--color-text] mb-4">Badges</h3>
+        <div class="flex flex-wrap items-center gap-4">
+          <Badge>Default</Badge>
+          <Badge variant="accent">Accent</Badge>
+          <Badge variant="success">Success</Badge>
+          <Badge variant="warning">Warning</Badge>
+          <Badge variant="error">Error</Badge>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="mb-12">
+        <h3 class="text-lg font-medium text-[--color-text] mb-4">Inputs</h3>
+        <div class="max-w-sm space-y-4">
+          <Input name="demo-email" label="Email" type="email" placeholder="you@example.com" />
+          <Input name="demo-error" label="With Error" placeholder="Enter value" error="This field is required" />
+        </div>
+      </div>
+    </Section>
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+  class?: string;
+}
+
+const { title, description, icon = "ph-sparkle", class: className = "" } = Astro.props;
+---
+
+<div
+  class:list={[
+    "bg-[--color-surface] border border-[--color-border] rounded-[--radius-md] p-6",
+    className
+  ]}
+>
+  <div class="w-10 h-10 rounded-[--radius-sm] bg-[--color-accent-muted] flex items-center justify-center mb-4">
+    <i class={`ph ${icon} text-xl text-[--color-accent]`} aria-hidden="true"></i>
+  </div>
+  <h3 class="text-lg font-semibold text-[--color-text] mb-2">{title}</h3>
+  <p class="text-sm text-[--color-text-muted] leading-relaxed">{description}</p>
+</div>
