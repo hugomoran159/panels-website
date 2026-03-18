@@ -68,6 +68,20 @@ const fullImageUrl = image.startsWith("http") ? image : `${siteUrl}${image}`;
     </a>
 
     <slot />
+
+    <!-- OpenPanel Analytics -->
+    <script is:inline>
+      window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}},has:function(t,r){return"q"===r}})}();
+      window.op('init', {
+        clientId: '23eb6203-e10c-4ffa-b616-fd3d58b15a51',
+        clientSecret: 'sec_c0ef7d1afa5fb503177f',
+        apiUrl: 'https://analytics.panels-analytics.com/api',
+        trackScreenViews: true,
+        trackOutgoingLinks: true,
+        trackAttributes: true,
+      });
+    </script>
+    <script src="https://analytics.panels-analytics.com/op1.js" defer async></script>
   </body>
 </html>
 
