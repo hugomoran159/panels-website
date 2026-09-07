@@ -1,0 +1,47 @@
+# Agent Factory project definition (contract 05). Read by
+# `factory project connect hugomoran159/panels-website`; preparation clones the
+# newest green main commit, runs golden.warm inside the restricted builder and
+# snapshots the workspace that sessions fork from.
+name: panels-website
+repo: hugomoran159/panels-website
+base: main
+
+golden:
+  trigger: ci-green
+  # The toolchain image ships node 24, npm and bun but not pnpm. Install the
+  # pinned pnpm from package.json's packageManager into the workspace volume
+  # so sessions and warm use the same binary, and keep the content-addressable
+  # store on the same volume as node_modules so pnpm can hard-link.
+  warm:
+    - export npm_config_cache=/work/.cache/npm
+    - npm install --no-audit --no-fund --prefix /work/.cache/pnpm pnpm@9.15.4
+    - /work/.cache/pnpm/node_modules/.bin/pnpm install --frozen-lockfile --store-dir /work/.cache/pnpm-store
+
+session:
+  workspace_mounts:
+    repo: /work/repo
+  toolchain_image: ghcr.io/hugomoran159/agent-factory/toolchain@sha256:770877b19c17de743862f156d89ab4450a601fe8dcbea62fd04af5914cd9e738
+  # A static Astro site: the agent plus one build is far below the v15 sizes.
+  budgets:
+    claude: {cpu: "1", memory: "2Gi"}
+    codex: {cpu: "1", memory: "2Gi"}
+    none: {cpu: "500m", memory: "1Gi"}
+    default: {cpu: "500m", memory: "1Gi"}
+
+presets:
+  dev: {git: repo}
+  pair: {git: repo}
+  checker: {git: none, harness: none}
+
+verbs:
+  verify: /work/.cache/pnpm/node_modules/.bin/pnpm build
+  dev: /work/.cache/pnpm/node_modules/.bin/pnpm dev --host
+
+# deploy.yml builds and deploys every push to main and every pull request to
+# Cloudflare Pages; its `deploy` job is the check the factory treats as green.
+ci:
+  smoke_workflow: deploy.yml
+  gate_check: deploy
+
+agents:
+  doc: AGENTS.md
